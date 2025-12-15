@@ -14,6 +14,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Batch progress bar mode
 - Integration with async/await patterns
 
+## [0.1.1] - 2025-12-15
+
+### Fixed
+
+- Add `from __future__ import annotations` for Python 3.8 compatibility
+- Fix type checking errors in mypy with appropriate type: ignore comments
+- Update GitHub Actions to latest versions (setup-python@v5, codecov@v4, upload-artifact@v4)
+- Update ruff configuration to use `lint.select` instead of deprecated `select`
+- Update mypy configuration for Python 3.9+ support with proper error handling
+- All code quality checks passing: ruff, black, mypy
+- All 116 tests passing with 95% coverage
+
+### Changed
+
+- Improved error handling and type annotations
+- Enhanced CI/CD workflows with better error reporting
+
 ## [0.1.0] - 2025-01-15
 
 ### Added

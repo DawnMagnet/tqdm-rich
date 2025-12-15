@@ -43,7 +43,7 @@ from rich.progress import (
 )
 from rich.progress_bar import ProgressBar
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __author__ = "DawnMagnet"
 __all__ = ["tqdm", "track", "TqdmRich"]
 

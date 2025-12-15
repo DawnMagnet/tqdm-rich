@@ -1,6 +1,6 @@
 [project]
 name = "tqdm-rich"
-version = "0.1.0"
+version = "0.1.1"
 description = "A thread-safe tqdm-compatible progress bar library using Rich"
 readme = "README.md"
 license = { text = "MIT" }
