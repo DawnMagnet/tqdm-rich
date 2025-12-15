@@ -40,28 +40,38 @@ git push origin vX.Y.Z
 
 1. ✅ 运行所有测试
 2. ✅ 执行代码质量检查
-3. ✅ 构建源码包和 wheel 包
-4. ✅ 创建 GitHub Release
-5. ✅ 上传构建产物到 Release
-6. ✅ 发布到 PyPI（如果配置了 token）
+3. ✅ 构建源码包和 wheel 包（使用 `uv build`）
+4. ✅ 发布到 PyPI（使用 `uv publish`）
+5. ✅ 创建 GitHub Release
+6. ✅ 上传构建产物到 Release
 
 ## 配置 PyPI 发布
 
 要启用自动发布到 PyPI，需要在 GitHub 设置中添加 Secret：
 
 1. 进入仓库设置 → Secrets and variables → Actions
-2. 点击 "New repository secret"
-3. 添加 `PYPI_API_TOKEN`：
-   - 获取方式：在 PyPI 账户中生成 API token
-   - 在 https://pypi.org/manage/account/tokens/ 创建 token
+2. 点击 "New repository secret"，分别添加以下两个 secrets：
+   - `UV_PUBLISH_USERNAME`：PyPI 账户用户名
+   - `UV_PUBLISH_PASSWORD`：PyPI API token
+3. 获取方式：
+   - 访问 https://pypi.org/manage/account/tokens/ 创建 API token
+   - 创建一个专门用于项目发布的 token
+   - 使用 token 作为密码（用户名可以使用 `__token__` 或实际的 PyPI 用户名）
 
 ## 工作流文件说明
 
-### tests.yml
+### release.yml
 
-- 在每次 push 和 PR 时运行
-- 在多个 Python 版本和操作系统上测试
-- 运行 linting、formatting 和类型检查
+- 在创建版本标签时触发（`git tag vX.Y.Z && git push origin vX.Y.Z`）
+- 自动执行以下步骤：
+
+  1. 运行所有测试确保质量
+  2. 使用 `uv build` 构建分发包（.tar.gz 和 .whl）
+  3. 使用 `uv publish` 发布到 PyPI（推荐方式）
+  4. 创建 GitHub Release 并上传构建产物
+
+- 使用 `uv` 的原生发布命令，无需额外工具
+- 自动读取 `UV_PUBLISH_USERNAME` 和 `UV_PUBLISH_PASSWORD` 环境变量
 - 上传覆盖率报告到 Codecov
 
 ### release.yml

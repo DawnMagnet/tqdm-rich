@@ -10,7 +10,7 @@ permissions:
   packages: write
 
 jobs:
-  build:
+  build-and-publish:
     runs-on: ubuntu-latest
 
     steps:
@@ -31,11 +31,18 @@ jobs:
 
       - name: Run tests
         run: |
-          uv run pytest tests/ -v --cov=src/tqdm_rich
+          uv run pytest tests/ -q --cov=src/tqdm_rich
 
-      - name: Build distribution packages
+      - name: Build distribution
         run: |
           uv build
+
+      - name: Publish to PyPI
+        run: |
+          uv publish
+        env:
+          UV_PUBLISH_USERNAME: ${{ secrets.UV_PUBLISH_USERNAME }}
+          UV_PUBLISH_PASSWORD: ${{ secrets.UV_PUBLISH_PASSWORD }}
 
       - name: Get version from tag
         id: get_version
@@ -53,9 +60,3 @@ jobs:
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Publish to PyPI
-        run: |
-          uv pip install twine
-          twine upload dist/* -u __token__ -p ${{ secrets.PYPI_API_TOKEN }}
-        if: success()
