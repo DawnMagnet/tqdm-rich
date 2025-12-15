@@ -10,6 +10,7 @@ This test suite covers:
 """
 
 import pytest
+
 from tqdm_rich import track
 
 
@@ -21,7 +22,7 @@ class TestTrackBasic:
         items = []
         for item in track(range(10), description="Test"):
             items.append(item)
-        
+
         assert len(items) == 10
         assert items == list(range(10))
 
@@ -30,7 +31,7 @@ class TestTrackBasic:
         count = 0
         for _ in track(range(100), description="Count"):
             count += 1
-        
+
         assert count == 100
 
     def test_track_with_description(self):
@@ -52,7 +53,7 @@ class TestTrackWithTotal:
         items = []
         for item in track(range(10), total=10):
             items.append(item)
-        
+
         assert len(items) == 10
 
     def test_track_total_detection(self):
@@ -72,10 +73,11 @@ class TestTrackGenerator:
 
     def test_track_generator(self):
         """Test track with a generator function."""
+
         def gen():
             for i in range(10):
                 yield i
-        
+
         items = list(track(gen()))
         assert len(items) == 10
         assert items == list(range(10))
@@ -88,10 +90,11 @@ class TestTrackGenerator:
 
     def test_track_generator_without_total(self):
         """Test track with generator without total."""
+
         def gen():
             for i in range(5):
                 yield i
-        
+
         items = list(track(gen(), description="Generator"))
         assert len(items) == 5
 
@@ -101,19 +104,21 @@ class TestTrackLogarithmicMode:
 
     def test_track_log_mode_explicit(self):
         """Test track with explicit log parameter."""
+
         def slow_gen():
             for i in range(100):
                 yield i
-        
+
         items = list(track(slow_gen(), log=20))
         assert len(items) == 100
 
     def test_track_log_mode_default(self):
         """Test track with default log mode for generators."""
+
         def gen():
             for i in range(50):
                 yield i
-        
+
         # Generator without total should use log mode
         items = list(track(gen()))
         assert len(items) == 50
@@ -160,12 +165,13 @@ class TestTrackErrorHandling:
 
     def test_track_exception_in_generator(self):
         """Test track with generator that raises exception."""
+
         def failing_gen():
             for i in range(100):
                 if i == 30:
                     raise RuntimeError("Generator failed")
                 yield i
-        
+
         with pytest.raises(RuntimeError):
             list(track(failing_gen()))
 
@@ -183,7 +189,7 @@ class TestTrackErrorHandling:
             count += 1
             if item == 10:
                 break
-        
+
         assert count == 11
 
 
@@ -202,10 +208,11 @@ class TestTrackEmptyIterables:
 
     def test_track_empty_generator(self):
         """Test track with empty generator."""
+
         def empty_gen():
             return
             yield  # Never reached
-        
+
         items = list(track(empty_gen()))
         assert items == []
 
@@ -238,10 +245,11 @@ class TestTrackLargeIterables:
 
     def test_track_large_with_log(self):
         """Test track with large range in log mode."""
+
         def large_gen():
             for i in range(10000):
                 yield i
-        
+
         count = 0
         for _ in track(large_gen(), log=50):
             count += 1
@@ -313,13 +321,15 @@ class TestTrackCombinations:
 
     def test_track_all_parameters(self):
         """Test track with all parameters specified."""
-        items = list(track(
-            range(10),
-            description="Full",
-            total=10,
-            log=None,
-            transient=False,
-        ))
+        items = list(
+            track(
+                range(10),
+                description="Full",
+                total=10,
+                log=None,
+                transient=False,
+            )
+        )
         assert len(items) == 10
 
     def test_track_log_with_explicit_total(self):
@@ -329,10 +339,11 @@ class TestTrackCombinations:
 
     def test_track_log_and_transient(self):
         """Test track with log mode and transient."""
+
         def gen():
             for i in range(50):
                 yield i
-        
+
         items = list(track(gen(), log=20, transient=True))
         assert len(items) == 50
 
@@ -390,13 +401,14 @@ class TestTrackYield:
 
     def test_track_generator_yields_once(self):
         """Test that generator items are yielded only once."""
+
         def gen():
             for i in range(10):
                 yield i
-        
+
         items1 = list(track(gen()))
         items2 = list(gen())
-        
+
         assert items1 == items2
 
 
@@ -409,16 +421,17 @@ class TestTrackNesting:
         for i in track(range(5)):
             for j in track(range(5), transient=True):
                 count += 1
-        
+
         assert count == 25
 
     def test_track_in_function(self):
         """Test track inside a function."""
+
         def process(items):
             results = []
             for item in track(items, description="Processing"):
                 results.append(item * 2)
             return results
-        
+
         results = process(range(5))
         assert results == [0, 2, 4, 6, 8]

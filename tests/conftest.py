@@ -2,16 +2,17 @@
 Pytest configuration and fixtures for tqdm_rich tests.
 """
 
-import pytest
 import time
 from typing import Generator
+
+import pytest
 
 
 @pytest.fixture
 def slow_iterable() -> Generator[int, None, None]:
     """
     A slow iterable that simulates work.
-    
+
     Yields:
         Numbers from 0 to 9 with a small delay between each
     """
@@ -24,7 +25,7 @@ def slow_iterable() -> Generator[int, None, None]:
 def fast_iterable():
     """
     A fast iterable for quick tests.
-    
+
     Returns:
         Range of 100 numbers
     """

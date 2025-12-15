@@ -17,7 +17,7 @@ tqdm-rich 的发布流程使用自动化的 GitHub Actions 工作流程。本文
 
 - **pyproject.toml**: 更新 `version` 字段
 - **CHANGELOG.md**: 添加新版本的更新日志
-- **src/tqdm_rich/__init__.py**: 更新 `__version__` 变量
+- **src/tqdm_rich/**init**.py**: 更新 `__version__` 变量
 
 ### 2. 提交更改
 
@@ -58,12 +58,14 @@ git push origin vX.Y.Z
 ## 工作流文件说明
 
 ### tests.yml
+
 - 在每次 push 和 PR 时运行
 - 在多个 Python 版本和操作系统上测试
 - 运行 linting、formatting 和类型检查
 - 上传覆盖率报告到 Codecov
 
 ### release.yml
+
 - 在创建版本标签时触发
 - 构建分发包
 - 创建 GitHub Release
@@ -71,6 +73,7 @@ git push origin vX.Y.Z
 - 发布到 PyPI
 
 ### quality.yml
+
 - 在每次 push 和 PR 时运行
 - 执行代码质量检查
 - 生成覆盖率报告
@@ -87,6 +90,7 @@ git push origin vX.Y.Z
 ### 版本标签格式
 
 使用 `vX.Y.Z` 格式，例如：
+
 - `v0.1.0` - 首次发布
 - `v0.1.1` - 补丁版本
 - `v0.2.0` - 新功能版本
@@ -102,7 +106,7 @@ git push origin vX.Y.Z
 - [ ] 类型检查通过 (`mypy src/`)
 - [ ] CHANGELOG.md 已更新
 - [ ] pyproject.toml 中版本已更新
-- [ ] __init__.py 中 __version__ 已更新
+- [ ] **init**.py 中 **version** 已更新
 - [ ] README.md 中的文档已更新
 - [ ] Git 历史记录干净（无未提交的更改）
 

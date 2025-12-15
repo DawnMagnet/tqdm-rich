@@ -14,18 +14,17 @@ Key Features:
 
 Example:
     >>> from tqdm_rich import tqdm, track
-    >>> 
+    >>>
     >>> # Basic tqdm usage
     >>> for item in tqdm(range(100), desc="Processing"):
     ...     time.sleep(0.01)
-    >>> 
+    >>>
     >>> # Generator-based tracking
     >>> for item in track(range(100), description="Working"):
     ...     time.sleep(0.01)
 """
 
 import threading
-import time
 from collections.abc import Generator, Iterable
 from typing import Any, Optional, TypeVar, Union
 
@@ -57,22 +56,22 @@ _COLOR_ERROR = "red"
 class DynamicBarColumn(BarColumn):
     """
     Custom progress bar column that supports dynamic color changes.
-    
+
     This column reads the 'bar_style' field from the task to determine
     the current color of the progress bar, allowing for dynamic recoloring
     based on the task state (running, success, error).
-    
+
     Attributes:
         bar_width: Width of the progress bar (None for auto)
     """
 
-    def render(self, task: Task) -> RenderableType:
+    def render(self, task: Task) -> RenderableType:  # type: ignore[override]
         """
         Render the progress bar with dynamically selected color.
-        
+
         Args:
             task: The progress task to render
-            
+
         Returns:
             A ProgressBar renderable with the appropriate styling
         """
@@ -96,11 +95,11 @@ class DynamicBarColumn(BarColumn):
 class _ProgressManager:
     """
     Thread-safe singleton manager for Rich Progress instances.
-    
+
     This manager ensures that only one Progress instance is active at a time,
     coordinating multiple concurrent progress tasks. It uses reference counting
     to determine when to start and stop the underlying Progress instance.
-    
+
     Thread Safety:
         All operations are protected by an RLock to ensure thread safety.
     """
@@ -114,10 +113,10 @@ class _ProgressManager:
     def get_progress(self) -> Progress:
         """
         Get or create the global Progress instance.
-        
+
         Thread-safe operation that either returns an existing Progress instance
         or creates a new one with standard columns.
-        
+
         Returns:
             The shared Progress instance
         """
@@ -139,10 +138,10 @@ class _ProgressManager:
     def start_task(self) -> Progress:
         """
         Start a new task, initializing the Progress instance if needed.
-        
+
         Uses reference counting to track active tasks. The Progress instance
         is only started when the first task begins.
-        
+
         Returns:
             The Progress instance
         """
@@ -156,7 +155,7 @@ class _ProgressManager:
     def stop_task(self) -> None:
         """
         Stop a task and clean up if no more tasks are active.
-        
+
         When the last task stops, the Progress instance is stopped and
         reset for future use.
         """
@@ -181,12 +180,12 @@ def track(
 ) -> Generator[T, None, None]:
     """
     A generator-based progress bar that wraps an iterable sequence.
-    
+
     Automatically changes color based on the progress state:
     - White: Running
     - Green: Successfully completed
     - Red: Error or interrupted
-    
+
     Args:
         sequence: An iterable to track
         description: Description text to display (default: "Processing")
@@ -196,14 +195,14 @@ def track(
              logarithmically to show activity in long-running operations.
         transient: If True, remove the progress bar after completion
                    (default: False)
-    
+
     Yields:
         Items from the sequence one at a time
-        
+
     Raises:
         Any exception raised during iteration is re-raised after updating
         the progress bar to show error state.
-        
+
     Example:
         >>> for item in track(range(100), description="Processing items"):
         ...     # Do something with item
@@ -213,7 +212,7 @@ def track(
     is_log_mode = False
     if total is None:
         if hasattr(sequence, "__len__"):
-            total = len(sequence)
+            total = len(sequence)  # type: ignore[arg-type]
         else:
             is_log_mode = True
 
@@ -257,7 +256,7 @@ def track(
         # Mark successful completion
         success = True
 
-    except Exception as e:
+    except Exception:
         # Update to error state before re-raising
         progress.update(
             task_id,
@@ -294,10 +293,10 @@ def track(
 class TqdmRich:
     """
     A tqdm-compatible progress bar class using Rich as the backend.
-    
+
     This class provides an API similar to tqdm.tqdm but uses Rich for rendering,
     offering a more beautiful and feature-rich progress bar experience.
-    
+
     Attributes:
         iterable: The sequence being iterated
         desc: Description of the progress bar
@@ -306,7 +305,7 @@ class TqdmRich:
         leave: Whether to leave the progress bar after completion
         file: Output file (ignored, for tqdm compatibility)
         colour: Color to use (stored but overridden by state-based coloring)
-    
+
     Example:
         >>> bar = TqdmRich(range(100), desc="Processing")
         >>> for item in bar:
@@ -335,7 +334,7 @@ class TqdmRich:
     ) -> None:
         """
         Initialize a TqdmRich progress bar.
-        
+
         Args:
             iterable: An iterable to wrap (optional)
             desc: Short description of the progress bar
@@ -362,7 +361,7 @@ class TqdmRich:
         self.unit = unit
         self.colour = colour
         self.position = position or 0
-        
+
         # For compatibility with tqdm
         self.file = file
         self.ncols = ncols
@@ -371,30 +370,30 @@ class TqdmRich:
         self.miniters = miniters
         self.ascii = ascii
         self.unit_scale = unit_scale
-        
+
         # Initialize internal state
         self._iterator: Optional[Generator[T, None, None]] = None
         self._progress: Optional[Progress] = None
         self._task_id: Optional[int] = None
         self._completed = 0
 
-    def __iter__(self) -> "TqdmRich":
+    def __iter__(self) -> Generator[T, None, None]:  # type: ignore[override]
         """Start iteration over the wrapped iterable."""
         if self.disable:
             # If disabled, just iterate without progress
             if self.iterable is not None:
-                yield from self.iterable
-            return self
-        
+                yield from self.iterable  # type: ignore[misc]
+            return
+
         # Create the iterator
         if self.iterable is None:
-            return self
-        
+            return
+
         # Determine total
         total = self.total
         if total is None and hasattr(self.iterable, "__len__"):
-            total = len(self.iterable)
-        
+            total = len(self.iterable)  # type: ignore[arg-type]
+
         # Start progress tracking
         self._progress = _manager.start_task()
         self._task_id = self._progress.add_task(
@@ -403,22 +402,22 @@ class TqdmRich:
             start=True,
             bar_style=_COLOR_RUNNING,
         )
-        
+
         success = False
         try:
             for item in self.iterable:
                 self._completed += 1
-                yield item
-                
+                yield item  # type: ignore[misc]
+
                 # Update progress
                 if self._task_id is not None:
                     self._progress.update(
                         self._task_id,
                         advance=1,
                     )
-            
+
             success = True
-        
+
         except Exception:
             # Update to error state
             if self._task_id is not None:
@@ -428,7 +427,7 @@ class TqdmRich:
                     description=f"[{_COLOR_ERROR}]{self.desc}",
                 )
             raise
-        
+
         finally:
             # Final state
             if self._task_id is not None:
@@ -445,28 +444,28 @@ class TqdmRich:
                         bar_style=_COLOR_ERROR,
                         description=f"[{_COLOR_ERROR}]{self.desc}",
                     )
-                
+
                 # Remove if not leaving
                 if not self.leave:
                     self._progress.remove_task(self._task_id)
-            
+
             _manager.stop_task()
 
-    def __next__(self) -> T:
+    def __next__(self) -> T:  # type: ignore[misc,return-value,type-var]
         """Get the next item from the iterator."""
         if self._iterator is None:
             self._iterator = iter(self)
-        return next(self._iterator)
+        return next(self._iterator)  # type: ignore[arg-type,return-value]
 
     def update(self, n: int = 1) -> None:
         """
         Update the progress bar.
-        
+
         Args:
             n: Number of items to advance the progress bar by
         """
         if self._task_id is not None and self._progress is not None:
-            self._progress.update(self._task_id, advance=n)
+            self._progress.update(self._task_id, advance=n)  # type: ignore[arg-type]
             self._completed += n
 
     def close(self) -> None:
@@ -474,12 +473,12 @@ class TqdmRich:
         if self._task_id is not None and self._progress is not None:
             if self.leave:
                 self._progress.update(
-                    self._task_id,
+                    self._task_id,  # type: ignore[arg-type]
                     bar_style=_COLOR_SUCCESS,
                     description=f"[{_COLOR_SUCCESS}]{self.desc}",
                 )
             else:
-                self._progress.remove_task(self._task_id)
+                self._progress.remove_task(self._task_id)  # type: ignore[arg-type]
             self._task_id = None
 
     def __enter__(self) -> "TqdmRich":
@@ -492,8 +491,8 @@ class TqdmRich:
 
 
 # Create a module-level function alias for tqdm compatibility
-def tqdm(
-    iterable: Optional[Iterable[T]] = None,
+def tqdm(  # type: ignore[misc,type-var]
+    iterable: Optional[Iterable[Any]] = None,
     desc: Optional[str] = None,
     total: Optional[int] = None,
     leave: bool = True,
@@ -501,20 +500,20 @@ def tqdm(
 ) -> TqdmRich:
     """
     Create a tqdm-compatible progress bar using Rich backend.
-    
+
     This is a convenience function that creates and returns a TqdmRich instance.
     It provides a familiar tqdm API for users migrating from tqdm.
-    
+
     Args:
         iterable: An iterable to wrap
         desc: Short description of the progress bar
         total: Expected number of items (auto-detected if not provided)
         leave: If True, keep the progress bar after completion
         **kwargs: Additional arguments passed to TqdmRich
-    
+
     Returns:
         A TqdmRich instance
-        
+
     Example:
         >>> from tqdm_rich import tqdm
         >>> for item in tqdm(range(100)):

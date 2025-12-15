@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Planned Features
+
 - Custom column configuration
 - Progress persistence/resumption
 - Batch progress bar mode
@@ -16,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2025-01-15
 
 ### Added
+
 - Initial release
 - `tqdm()` function for tqdm-compatible progress bars using Rich backend
 - `TqdmRich` class for class-based progress tracking
@@ -39,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Generator and custom iterable support
 
 ### Features
+
 - **Beautiful Progress Bars**: Renders gorgeous terminal progress bars using Rich
 - **Thread-Safe**: Fully thread-safe with RLock-protected access
 - **tqdm Compatible**: Drop-in replacement with familiar API
@@ -48,9 +51,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Generator Support**: Elegant generator-based progress tracking
 
 ### Dependencies
+
 - rich >= 10.0.0: Core rendering engine
 
 ### Development Dependencies
+
 - pytest >= 7.0.0: Testing framework
 - pytest-cov >= 4.0.0: Coverage reporting
 - black >= 23.0.0: Code formatting
@@ -58,6 +63,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - mypy >= 1.0.0: Type checking
 
 ### Documentation
+
 - Comprehensive README with quick start guide
 - API reference for all public functions and classes
 - Thread safety documentation
@@ -66,6 +72,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Configuration guide
 
 ### Testing
+
 - 50+ tests for tqdm() and TqdmRich class
 - 40+ tests for track() function
 - 30+ tests for multi-threading and concurrency
@@ -77,18 +84,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Notes for Future Releases
 
 ### v0.2.0 (Planned)
+
 - Custom progress column configuration
 - Support for progress bar presets (fancy, simple, minimal)
 - Better logging integration
 - Performance optimizations
 
 ### v0.3.0 (Planned)
+
 - Async/await support with AsyncTrack
 - Progress bar persistence (save/restore state)
 - Integration with multiprocessing
 - Advanced statistics and metrics
 
 ### v1.0.0 (Planned)
+
 - Stable API guarantee
 - Complete feature parity with major tqdm features
 - Performance benchmarks

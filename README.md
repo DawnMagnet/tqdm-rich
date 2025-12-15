@@ -15,16 +15,19 @@ A thread-safe, tqdm-compatible progress bar library built on [Rich](https://rich
 🔄 **tqdm Compatible** - Drop-in replacement for tqdm with familiar API
 
 🎨 **Smart Coloring** - Automatic color indication:
+
 - **White** - Running
-- **Green** - Successfully completed  
+- **Green** - Successfully completed
 - **Red** - Error or interrupted
 
 ⏱️ **Flexible Progress Modes**:
+
 - Linear progress (known total)
 - Logarithmic progress (unknown total with activity indicator)
 - Context manager support
 
 📊 **Rich Features**:
+
 - Time elapsed and estimated remaining
 - Progress percentage
 - Custom descriptions
@@ -82,7 +85,7 @@ from tqdm_rich import TqdmRich
 with TqdmRich(range(100), desc="Loading") as bar:
     for item in bar:
         time.sleep(0.01)
-        
+
 # Or iterate without context manager
 bar = TqdmRich(range(100), desc="Processing")
 for item in bar:
@@ -108,6 +111,7 @@ bar.close()
 Create a tqdm-compatible progress bar.
 
 **Parameters:**
+
 - `iterable`: An iterable to wrap (optional)
 - `desc`: Short description of the progress bar
 - `total`: Expected number of items (auto-detected if not provided)
@@ -117,6 +121,7 @@ Create a tqdm-compatible progress bar.
 **Returns:** `TqdmRich` instance
 
 **Example:**
+
 ```python
 for item in tqdm(range(100), desc="Processing"):
     pass
@@ -127,6 +132,7 @@ for item in tqdm(range(100), desc="Processing"):
 Generator-based progress tracking.
 
 **Parameters:**
+
 - `sequence`: An iterable to track
 - `description`: Description text to display
 - `total`: Expected number of items (auto-detected if available)
@@ -136,6 +142,7 @@ Generator-based progress tracking.
 **Yields:** Items from the sequence
 
 **Example:**
+
 ```python
 for item in track(range(100), description="Processing"):
     pass
@@ -150,11 +157,13 @@ for item in track(generator, log=20):
 Class-based progress bar wrapper.
 
 **Key Methods:**
+
 - `update(n=1)`: Advance progress by n items
 - `close()`: Close the progress bar
 - `__enter__` / `__exit__`: Context manager support
 
 **Example:**
+
 ```python
 with TqdmRich(range(100), desc="Processing") as bar:
     for item in bar:
@@ -230,6 +239,7 @@ except ValueError as e:
 ### Customizing Colors
 
 Color customization is automatic based on progress state:
+
 - Running: White
 - Success: Green
 - Error: Red
@@ -257,15 +267,15 @@ for item in track(range(100), description="Quick task", transient=True):
 
 ## Comparison with tqdm
 
-| Feature | tqdm | tqdm-rich |
-|---------|------|-----------|
-| Basic progress bar | ✅ | ✅ |
-| Multi-threading support | ✅ | ✅ |
-| Beautiful rendering | ⚠️ | ✅ |
-| Color indication by state | ❌ | ✅ |
-| Generator tracking | ⚠️ | ✅ |
-| Rich integration | ❌ | ✅ |
-| Lightweight | ✅ | ✅ |
+| Feature                   | tqdm | tqdm-rich |
+| ------------------------- | ---- | --------- |
+| Basic progress bar        | ✅   | ✅        |
+| Multi-threading support   | ✅   | ✅        |
+| Beautiful rendering       | ⚠️   | ✅        |
+| Color indication by state | ❌   | ✅        |
+| Generator tracking        | ⚠️   | ✅        |
+| Rich integration          | ❌   | ✅        |
+| Lightweight               | ✅   | ✅        |
 
 ## Development
 
@@ -333,6 +343,7 @@ tqdm-rich/
 ## Performance
 
 The library is optimized for performance:
+
 - Minimal overhead over Rich's Progress
 - Efficient thread synchronization with locks
 - No busy-waiting or polling
@@ -341,6 +352,7 @@ The library is optimized for performance:
 ## Examples
 
 See the `examples/` directory for more comprehensive examples:
+
 - `basic_usage.py` - Basic tqdm and track usage
 - `threading.py` - Multi-threaded progress tracking
 - `error_handling.py` - Error state demonstration

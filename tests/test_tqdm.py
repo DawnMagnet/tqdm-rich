@@ -9,9 +9,9 @@ This test suite covers:
 - Manual update operations
 """
 
-import time
 import pytest
-from tqdm_rich import tqdm, TqdmRich
+
+from tqdm_rich import TqdmRich, tqdm
 
 
 class TestTqdmBasic:
@@ -22,7 +22,7 @@ class TestTqdmBasic:
         items = []
         for item in tqdm(range(10), desc="Test"):
             items.append(item)
-        
+
         assert len(items) == 10
         assert items == list(range(10))
 
@@ -31,7 +31,7 @@ class TestTqdmBasic:
         count = 0
         for _ in tqdm(fast_iterable):
             count += 1
-        
+
         assert count == 100
 
     def test_tqdm_with_description(self):
@@ -62,7 +62,7 @@ class TestTqdmBasic:
         bar = tqdm(range(10), disable=True)
         for _ in bar:
             count += 1
-        
+
         assert count == 10
 
     def test_tqdm_returns_tqdmrich(self):
@@ -88,7 +88,7 @@ class TestTqdmRichClass:
             count = 0
             for _ in bar:
                 count += 1
-        
+
         assert count == 10
 
     def test_tqdmrich_manual_iteration(self):
@@ -98,7 +98,7 @@ class TestTqdmRichClass:
         for item in bar:
             items.append(item)
         bar.close()
-        
+
         assert items == [0, 1, 2, 3, 4]
 
     def test_tqdmrich_update(self):
@@ -149,10 +149,11 @@ class TestTqdmParameters:
 
     def test_tqdm_generator_detection(self):
         """Test tqdm with generator (no __len__)."""
+
         def gen():
             for i in range(5):
                 yield i
-        
+
         items = list(tqdm(gen()))
         assert items == [0, 1, 2, 3, 4]
 
@@ -174,12 +175,13 @@ class TestErrorHandling:
 
     def test_exception_propagation(self):
         """Test that exceptions are properly propagated."""
+
         def failing_gen():
             for i in range(5):
                 if i == 2:
                     raise RuntimeError("Fail")
                 yield i
-        
+
         with pytest.raises(RuntimeError):
             list(tqdm(failing_gen()))
 
@@ -197,7 +199,7 @@ class TestErrorHandling:
             count += 1
             if item == 10:
                 break
-        
+
         assert count == 11
 
 
@@ -245,10 +247,11 @@ class TestEmptyIterables:
 
     def test_empty_generator(self):
         """Test tqdm with empty generator."""
+
         def empty_gen():
             return
             yield  # Never reached
-        
+
         items = list(tqdm(empty_gen()))
         assert items == []
 
@@ -372,8 +375,8 @@ class TestCompatibility:
     def test_tqdm_returns_correct_type(self):
         """Test that tqdm() returns a proper iterable."""
         bar = tqdm(range(5))
-        assert hasattr(bar, '__iter__')
-        assert hasattr(bar, '__next__')
+        assert hasattr(bar, "__iter__")
+        assert hasattr(bar, "__next__")
         bar.close()
 
 
@@ -386,17 +389,18 @@ class TestNestedIterables:
         for i in tqdm(range(5)):
             for j in tqdm(range(5), leave=False):
                 count += 1
-        
+
         assert count == 25
 
     def test_tqdm_in_function(self):
         """Test tqdm inside a function."""
+
         def process(items):
             results = []
             for item in tqdm(items, desc="Processing"):
                 results.append(item * 2)
             return results
-        
+
         results = process(range(5))
         assert results == [0, 2, 4, 6, 8]
 
@@ -418,10 +422,11 @@ class TestTypePreservation:
 
     def test_object_items(self):
         """Test iteration over custom objects."""
+
         class Obj:
             def __init__(self, value):
                 self.value = value
-        
+
         objs = [Obj(i) for i in range(3)]
         items = list(tqdm(objs))
         assert len(items) == 3
