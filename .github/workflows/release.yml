@@ -38,11 +38,11 @@ jobs:
           uv build
 
       - name: Publish to PyPI
-        run: |
-          uv publish
         env:
           UV_PUBLISH_USERNAME: ${{ secrets.UV_PUBLISH_USERNAME }}
           UV_PUBLISH_PASSWORD: ${{ secrets.UV_PUBLISH_PASSWORD }}
+        run: |
+          uv publish
 
       - name: Get version from tag
         id: get_version
