@@ -24,6 +24,8 @@ Example:
     ...     time.sleep(0.01)
 """
 
+from __future__ import annotations
+
 import threading
 from collections.abc import Generator, Iterable
 from typing import Any, Optional, TypeVar, Union
