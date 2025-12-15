@@ -2,57 +2,57 @@ name: Code Quality
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
 
 jobs:
   quality:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.11"
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
 
-    - name: Install uv
-      run: |
-        pip install uv
+      - name: Install uv
+        run: |
+          pip install uv
 
-    - name: Install dependencies
-      run: |
-        uv sync --extra dev
+      - name: Install dependencies
+        run: |
+          uv sync --extra dev
 
-    - name: Lint with ruff
-      run: |
-        uv run ruff check src/ tests/ --select E,F,W,I --show-source
-      continue-on-error: true
+      - name: Lint with ruff
+        run: |
+          uv run ruff check src/ tests/ --select E,F,W,I --show-source
+        continue-on-error: true
 
-    - name: Format check with black
-      run: |
-        uv run black --check src/ tests/ --diff
-      continue-on-error: true
+      - name: Format check with black
+        run: |
+          uv run black --check src/ tests/ --diff
+        continue-on-error: true
 
-    - name: Type check with mypy
-      run: |
-        uv run mypy src/ --ignore-missing-imports
-      continue-on-error: true
+      - name: Type check with mypy
+        run: |
+          uv run mypy src/ --ignore-missing-imports
+        continue-on-error: true
 
-    - name: Run pytest with coverage
-      run: |
-        uv run pytest tests/ -v --cov=src/tqdm_rich --cov-report=term-missing
+      - name: Run pytest with coverage
+        run: |
+          uv run pytest tests/ -v --cov=src/tqdm_rich --cov-report=term-missing
 
-    - name: Generate coverage report
-      run: |
-        uv run pytest tests/ --cov=src/tqdm_rich --cov-report=html
-      if: always()
+      - name: Generate coverage report
+        run: |
+          uv run pytest tests/ --cov=src/tqdm_rich --cov-report=html
+        if: always()
 
-    - name: Upload coverage artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: coverage-report
-        path: htmlcov/
-      if: always()
+      - name: Upload coverage artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: htmlcov/
+        if: always()
